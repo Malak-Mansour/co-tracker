@@ -1,24 +1,42 @@
-import torch
-import matplotlib.pyplot as plt
-from cotracker.utils.visualizer import read_video_from_path
+import cv2
 
-video_path = "/home/malak.mansour/Downloads/DEP/co-tracker/tif_attempts/tracked_frames/stitched_tif.mp4"
-video_np = read_video_from_path(video_path)  # shape: (T, H, W, C), type: np.ndarray
+# List to store clicked points
+clicked_points = []
 
-# Convert to torch tensor
-video = torch.from_numpy(video_np).permute(0, 3, 1, 2)  # (T, C, H, W)
+# Mouse callback function
+def click_event(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(f"Clicked at: ({x}, {y})")
+        clicked_points.append((x, y))
 
-# Get first frame (frame 0) as NumPy (H, W, 3)
-first_frame = video[0].permute(1, 2, 0).float().numpy() / 255.0
+        # Optional: show a red circle where clicked
+        img_copy = param.copy()
+        cv2.circle(img_copy, (x, y), 5, (0, 0, 255), -1)
+        cv2.imshow("Image", img_copy)
 
-# Show and click
-plt.imshow(first_frame)
-plt.title("Click on the image to select points (close window when done)")
-clicked_points = plt.ginput(n=-1, timeout=0)
-plt.close()
+# Load image
+image_path = 't01.jpg'  # Replace with your image path
+img = cv2.imread(image_path)
 
-# Format as queries: [0, x, y] (0 = frame index)
-queries = torch.tensor([[0., x, y] for x, y in clicked_points], dtype=torch.float32)
+if img is None:
+    raise FileNotFoundError(f"Image not found: {image_path}")
 
-print("Selected query points:")
-print(queries)
+# Show image and set mouse callback
+# cv2.imshow("Image", img)
+cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
+cv2.resizeWindow("Image", 1280, 720)  # Or another size that fits your screen
+cv2.imshow("Image", img)
+
+cv2.setMouseCallback("Image", click_event, img)
+
+# Wait until any key is pressed
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Save coordinates
+# print("All clicked points:", clicked_points)
+print("queries = torch.tensor([")
+for pt in clicked_points:
+    # print(f"    [0, {pt[0]}, {pt[1]}],")
+    print(f"    [0., {pt[0]:.1f}, {pt[1]:.1f}],")
+print("])")
