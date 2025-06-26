@@ -45,14 +45,26 @@ def draw_circle(rgb, coord, radius, color=(255, 0, 0), visible=True, color_alpha
     return rgb
 
 
+# def draw_line(rgb, coord_y, coord_x, color, linewidth):
+#     draw = ImageDraw.Draw(rgb)
+#     draw.line(
+#         (coord_y[0], coord_y[1], coord_x[0], coord_x[1]),
+#         fill=tuple(color),
+#         width=linewidth,
+#     )
+#     return rgb
 def draw_line(rgb, coord_y, coord_x, color, linewidth):
-    draw = ImageDraw.Draw(rgb)
-    draw.line(
-        (coord_y[0], coord_y[1], coord_x[0], coord_x[1]),
-        fill=tuple(color),
-        width=linewidth,
-    )
+    draw = ImageDraw.Draw(rgb, mode="RGBA")
+
+    # Base color with alpha
+    base_color = tuple(color) + (int(255 * 0.6),)  # 60% opacity
+
+    # Draw two overlapping 1px lines with alpha to simulate 1.5px feel
+    draw.line((coord_y[0], coord_y[1], coord_x[0], coord_x[1]), fill=base_color, width=1)
+    draw.line((coord_y[0]+0.5, coord_y[1]+0.5, coord_x[0]+0.5, coord_x[1]+0.5), fill=base_color, width=1)
+
     return rgb
+
 
 
 def add_weighted(rgb, alpha, original, beta, gamma):

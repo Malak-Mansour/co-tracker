@@ -1,0 +1,28 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Conda/virtualenv
+.env
+.venv
+env/
+venv/
+*.conda
+
+# PyTorch checkpoints
+checkpoints/
+*.pth
+
+# Jupyter/IPython
+.ipynb_checkpoints
+
+# Logs and outputs
+*.log
+*.mp4
+*.avi
+*.gif
+
+# System
+.DS_Store
+Thumbs.db

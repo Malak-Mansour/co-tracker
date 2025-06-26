@@ -41,6 +41,11 @@ Try these tracking modes for yourself with our [Colab demo](https://colab.resear
 
 ## Quick start
 The easiest way to use CoTracker is to load a pretrained model from `torch.hub`:
+```
+pip install torch==2.1.0 torchvision==0.16.0 --index-url https://download.pytorch.org/whl/cu121
+conda install numpy=1.24
+pip install ipython
+```
 
 ### Offline mode: 
 ```pip install imageio[ffmpeg]```, then:
