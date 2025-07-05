@@ -19,7 +19,7 @@ checkpoints/
 
 # Logs and outputs
 *.log
-*.mp4
+# *.mp4
 *.avi
 *.gif
 
