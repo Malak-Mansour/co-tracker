@@ -1,3 +1,10 @@
+# conda activate cotracker3
+# conda env export > cotracker3_env.yaml
+
+# conda env create -f cotracker3_env.yaml
+# conda activate cotracker3
+# pip install -e .
+
 name: cotracker3
 channels:
   - conda-forge
@@ -44,7 +51,6 @@ dependencies:
       - certifi==2022.12.7
       - charset-normalizer==2.1.1
       - contourpy==1.3.2
-      - cotracker==3.0
       - cycler==0.12.1
       - decorator==5.2.1
       - exceptiongroup==1.3.0
@@ -67,7 +73,7 @@ dependencies:
       - matplotlib-inline==0.1.7
       - mpmath==1.3.0
       - networkx==3.3
-      - numpy==2.2.6
+      - numpy==1.26.4
       - opencv-python==4.11.0.86
       - packaging==25.0
       - parso==0.8.4
@@ -87,8 +93,8 @@ dependencies:
       - sympy==1.13.3
       - tensorboard==2.19.0
       - tensorboard-data-server==0.7.2
-      - torch==2.1.0+cu121
-      - torchvision==0.16.0+cu121
+      - torch==2.1.0
+      - torchvision==0.16.0
       - tqdm==4.67.1
       - traitlets==5.14.3
       - triton==2.1.0
@@ -96,4 +102,3 @@ dependencies:
       - urllib3==1.26.13
       - wcwidth==0.2.13
       - werkzeug==3.1.3
-prefix: /home/malak.mansour/.conda/envs/cotracker3
