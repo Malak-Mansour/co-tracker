@@ -1,4 +1,4 @@
-'''
+# '''
 import os
 import torch
 import glob
@@ -7,24 +7,36 @@ from cotracker.utils.visualizer import Visualizer, read_video_from_path
 from IPython.display import HTML
 
 
-video_path = "/home/malak.mansour/Downloads/DEP/co-tracker/tif_attempts/tracked_frames/stitched_tif.mp4"
+video_path = "./tif_attempts/tracked_frames/stitched_tif.mp4"
 video = read_video_from_path(video_path)
 video = torch.from_numpy(video).permute(0, 3, 1, 2)[None].float()
 
 
-# Normalize to [0, 1] range if not already
+# Normalize to [0, 1]
 video = video / 255.0
 
+'''
 # Increase brightness and contrast
 brightness_factor = 0.2   # shift all pixel values up (try 0.1 to 0.3)
 contrast_factor = 1.4     # scale contrast (try 1.1 to 1.5)
 
 video = (video - 0.5) * contrast_factor + 0.5  # contrast
 video = video + brightness_factor              # brightness
+'''
+
+# --- Enhance contrast (especially dark outlines) ---
+# Gamma correction (darkens mid-tones, enhances black outlines)
+gamma = 0.6
+video = torch.pow(video, gamma)
+
+# Contrast stretching: increase contrast by remapping intensities
+mean = video.mean()
+video = (video - mean) * 2.0 + mean  # higher multiplier = more contrast
 
 # Clip to valid range [0, 1] and rescale to [0, 255] for consistency
 video = video.clamp(0, 1) * 255.0
 
+# video = video.repeat_interleave(2, dim=1)
 
 
 from cotracker.predictor import CoTrackerPredictor
@@ -129,8 +141,8 @@ queries = torch.tensor([
     [0., 4544.0, 657.0],
     [0., 1860.0, 510.0],
     [0., 1863.0, 565.0],
-    [0., 2058.0, 1120.0],
-    [0., 2061.0, 1164.0],
+    # [0., 2058.0, 1120.0],
+    # [0., 2061.0, 1164.0],
     [0., 4742.0, 1021.0],
     [0., 4742.0, 1072.0],
     [0., 3924.0, 2060.0],
@@ -161,7 +173,7 @@ pred_tracks, pred_visibility = model(video, queries=queries[None], backward_trac
 #     new visualizer file's draw_line function with linewidth 3: queries_backward_2.mp4 - BEST    
     
 vis = Visualizer(
-    save_dir='/home/malak.mansour/Downloads/DEP/co-tracker/tif_attempts/tracked_frames/select_points',
+    save_dir='./tif_attempts/tracked_frames/select_points',
     linewidth=3, 
     mode='cool',
     tracks_leave_trace=-1
@@ -208,7 +220,7 @@ from IPython.display import HTML
 # ↓ Prevent CUDA memory fragmentation
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
 
-video_path = "/home/malak.mansour/Downloads/DEP/co-tracker/tif_attempts/tracked_frames/stitched_tif.mp4"
+video_path = "/l/users/malak.mansour/DEP/co-tracker/tif_attempts/tracked_frames/stitched_tif.mp4"
 video = read_video_from_path(video_path)
 video = torch.from_numpy(video).permute(0, 3, 1, 2)[None].float()
 
@@ -302,7 +314,7 @@ pred_tracks, pred_visibility = model(video, queries=queries[None], backward_trac
 
 # Visualization
 vis = Visualizer(
-    save_dir='/home/malak.mansour/Downloads/DEP/co-tracker/tif_attempts/tracked_frames/select_points',
+    save_dir='/l/users/malak.mansour/DEP/co-tracker/tif_attempts/tracked_frames/select_points',
     linewidth=3, 
     mode='cool',
     tracks_leave_trace=-1
@@ -333,4 +345,4 @@ vis.visualize(
     filename=filename
 )
 
-# '''
+'''
