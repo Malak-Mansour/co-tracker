@@ -130,9 +130,10 @@ class CoTrackerPredictor(torch.nn.Module):
                 grid_size, self.interp_shape, device=video.device
             )
             if segm_mask is not None:
-                segm_mask = F.interpolate(
-                    segm_mask, tuple(self.interp_shape), mode="nearest"
-                )
+                # segm_mask = F.interpolate(
+                #     segm_mask, tuple(self.interp_shape), mode="nearest"
+                # )
+                segm_mask = F.interpolate(segm_mask.float(), size=video.shape[-2:], mode="nearest").long()
                 point_mask = segm_mask[0, 0][
                     (grid_pts[0, :, 1]).round().long().cpu(),
                     (grid_pts[0, :, 0]).round().long().cpu(),

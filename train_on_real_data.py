@@ -371,9 +371,11 @@ class Lite(LightningLite):
 
         model.cuda()
         teacher_models = []
-        from cotracker.datasets import real_dataset
+        # from cotracker.datasets import real_dataset        
+        # train_dataset = real_dataset.RealDataset(
 
-        train_dataset = real_dataset.RealDataset(
+        from cotracker.datasets import real_dataset_modified
+        train_dataset = real_dataset_modified.RealDataset(
             crop_size=args.crop_size,
             seq_len=args.sequence_len,
             traj_per_sample=args.traj_per_sample,
@@ -382,6 +384,8 @@ class Lite(LightningLite):
             data_splits=args.real_data_splits,
             random_resize=False,
             limit_samples=args.limit_samples,
+            video_dir=args.video_dir,
+            annotation_dir=args.annotation_dir,
         )
 
         if args.model_name == "cotracker":
@@ -829,6 +833,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--limit_samples", type=int, default=10000, help="limit samples on real data"
     )
+
+    parser.add_argument('--video_dir', type=str, required=True, help="Path to your video folder")
+    parser.add_argument('--annotation_dir', type=str, required=True, help="Path to your CSV annotations")
+
 
     args = parser.parse_args()
     logging.basicConfig(
